@@ -42,19 +42,20 @@ const Login = ({ updateState }: LoginProps) => {
     }
 
     return (
-        <form onSubmit={handleLogIn}>
-            <div className="input-group">
-                <label htmlFor="email">Sähköpostiosoite</label>
-                <input type="text" id="email" onChange={handleOnChange} />
-            </div>
-            <div className="input-group">
-                <label htmlFor="password">Salasana</label>
-                <input type="password" id="password" onChange={handleOnChange} />
-            </div>
+        <div className="login-form">
+            <form onSubmit={handleLogIn}>
+                <div className="input-group">
+                    <label htmlFor="email">Sähköpostiosoite</label>
+                    <input type="text" id="email" onChange={handleOnChange} />
+                </div>
+                <div className="input-group">
+                    <label htmlFor="password">Salasana</label>
+                    <input type="password" id="password" onChange={handleOnChange} />
+                </div>
 
-            <button type="submit">Kirjaudu sisään</button> <span className="error">{loginError}</span>
-
-        </form>
+                <button type="submit">Kirjaudu sisään</button> <span className="error">{loginError}</span>
+            </form>
+        </div>
     )
 }
 

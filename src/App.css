@@ -88,10 +88,40 @@ button.delete {
     margin-right: 0.5rem;
 }
 
+.login-form {
+    display: flex;
+    justify-content: center;
+}
+
+.login-form form {
+    width: 400px;
+}
+
+.login-form button {
+    margin-right: 1rem;
+}
+
 .diary-container {
     display: grid;
     gap: 1rem;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 1fr 1fr;
+}
+
+.entry-saved {
+    color: rgb(110, 193, 110);
+    margin-left: 1rem;
+    font-weight: bold;
+    opacity: 0;
+}
+
+.entry-saved.active {
+    animation: fade 5s ease-out;
+    opacity: 0;
+}
+
+@keyframes fade {
+    0%,60% { opacity: 1 }
+    100% { opacity: 0 }
 }
 
 .entry-search {
@@ -140,4 +170,10 @@ button.delete {
     max-width: 400px;
     background: rgb(20, 59, 92);
     border-radius: 10px;
+}
+
+@media only screen and (max-width: 1024px) {
+    .diary-container {
+        grid-template-columns: 1fr;
+    }
 }

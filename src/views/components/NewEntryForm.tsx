@@ -9,6 +9,7 @@ interface NewEntryFormProps {
 export const NewEntryForm = ({ entrySaved }: NewEntryFormProps): JSX.Element => {
     const [content, setContent] = useState("")
     const [isSaving, setIsSaving] = useState(false);
+    const [isSavedClass, setIsSavedClass] = useState("entry-saved");
 
     const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setContent(e.target.value)
@@ -20,6 +21,10 @@ export const NewEntryForm = ({ entrySaved }: NewEntryFormProps): JSX.Element => 
         if (response.data) {
             setContent("")
             entrySaved(response.authorized);
+            setIsSavedClass(`${isSavedClass} active`)
+            setTimeout(() => {
+                setIsSavedClass("entry-saved")
+            }, 5000);
         }
         setIsSaving(false);
     }
@@ -32,6 +37,7 @@ export const NewEntryForm = ({ entrySaved }: NewEntryFormProps): JSX.Element => 
                     <textarea id="content" onChange={handleContentChange} value={content} disabled={isSaving}></textarea>
                 </div>
                 <button disabled={content === "" || isSaving}>Tallenna</button>
+                <span className={isSavedClass}>Kirjoitus tallennettu</span>
             </form>
         </div>
     )
