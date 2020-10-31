@@ -1,25 +1,43 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Route, Switch
+} from "react-router-dom";
+import { getTokenFromStorage } from './utils/auth';
+import Entries from "./views/Entries";
+import Login from "./views/Login";
+import "./App.css"
 
-function App() {
+
+export interface RootState {
+  isLoggedIn: boolean;
+  token: string;
+}
+
+export type UpdateStateFunc = (updatedState: Partial<RootState>) => void;
+
+const App = () => {
+  const [state, setState] = useState<RootState>({
+    isLoggedIn: getTokenFromStorage() !== null,
+    token: getTokenFromStorage() || ""
+  })
+
+  const updateState: UpdateStateFunc = (updatedState: Partial<RootState>) => {
+    setState({ ...state, ...updatedState })
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Switch>
+        <Route exact path="/login">
+          <Login updateState={updateState} />
+        </Route>
+        <Route exact path="/">
+          {state.isLoggedIn ? <Entries rootState={state} updateState={updateState} /> : <Redirect to="/login" />}
+        </Route>
+      </Switch>
+    </Router>
   );
 }
 
