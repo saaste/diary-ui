@@ -60,11 +60,11 @@ button:disabled {
 }
 
 button.delete {
-    display: block;
-    font-size: 0.7rem;
-    padding: 0.1rem 0.3rem;
-    margin-left: 1rem;
     color: rgb(214, 125, 84);
+}
+
+button.edit {
+    color: rgb(214, 177, 84);
 }
 
 .error {
@@ -145,14 +145,25 @@ button.delete {
 .entry-meta {
     display: flex;
     flex-direction: row;
-    justify-content: flex-end;
+    justify-content: space-between;
 }
 
 .entry-timestamp {
     text-align: right;
 }
 
-#entry-delete-dialog {
+.entry-actions {
+    display: flex;
+}
+
+.entry-actions button {
+    display: block;
+    font-size: 0.7rem;
+    padding: 0.1rem 0.3rem;
+    margin-left: 1rem;
+}
+
+#entry-delete-dialog, #entry-edit-dialog {
     position: fixed;
     top: 0;
     left: 0;
@@ -165,9 +176,10 @@ button.delete {
     justify-content: center;
 }
 
-#entry-delete-dialog > div {
+#entry-delete-dialog > div, #entry-edit-dialog > div {
     padding: 1rem;
-    max-width: 400px;
+    width: 100%;
+    max-width: 600px;
     background: rgb(20, 59, 92);
     border-radius: 10px;
 }

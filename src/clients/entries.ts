@@ -80,6 +80,38 @@ export const createEntry = async (content: string): Promise<Response<boolean>> =
     return value;
 }
 
+export const updateEntry = async (entry: Entry | null): Promise<Response<boolean>> => {
+    if (entry === null) {
+        return {
+            data: false,
+            authorized: true,
+        }
+    }
+    
+    const request = {
+        method: "PUT",
+        headers: getHeaders(),
+        body: JSON.stringify(entry)
+    }
+
+    const response = await fetch(`${API_URL}/entries/${entry.id}`, request);
+
+    const value = {
+        data: true,
+        authorized: response.status !== 401
+    }
+
+    if (!response.ok) {
+        value.data = false;
+        if (response.status !== 401) {
+            console.log("Updating an entry failed");
+            console.error(response);
+        }
+    }
+
+    return value;
+}
+
 export const deleteEntry = async (entryId: string): Promise<Response<void>> => {
     const reqOpt = { method: 'DELETE', headers: getHeaders() }
     let url = `${API_URL}/entries/${entryId}`

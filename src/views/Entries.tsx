@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { RootState, UpdateStateFunc } from "../App";
-import { deleteEntry, fetchEntries } from "../clients/entries";
+import { deleteEntry, fetchEntries, updateEntry } from "../clients/entries";
 import { setAsLoggedOut } from "../utils/auth";
 import { sleep } from "../utils/sleep";
 import { Entry } from "../utils/types";
@@ -30,6 +30,7 @@ const Entries = ({ rootState, updateState }: EntriesProps) => {
     const [searchFields, setSearchFields] = useState<SearchFields>(defaultSearchFields)
     const [isLoadingEntries, setIsLoadingEntries] = useState(true);
     const [entryToDelete, setEntryToDelete] = useState<Entry | null>(null);
+    const [entryToEdit, setEntryToEdit] = useState<Entry | null>(null)
 
     const redirectToLogin = () => {
         setAsLoggedOut(updateState);
@@ -56,22 +57,40 @@ const Entries = ({ rootState, updateState }: EntriesProps) => {
 
     }
 
-    const handleDeleteClick = (entry: any) => {
+    const handleDeleteClick = (entry: Entry) => {
         setEntryToDelete(entry);
+    }
+
+    const handleEditClick = (entry: Entry) => {
+        setEntryToEdit(entry);
     }
 
     const handleCancelDeletionClick = () => {
         setEntryToDelete(null);
     }
 
+    const handleCancelEditClick = () => {
+        setEntryToEdit(null);
+    }
+
     const handleSubmitDeletionClick = async () => {
         const entryId = entryToDelete?.id || ""
-        const deleteREsponse = await deleteEntry(entryId)
-        if (!deleteREsponse.authorized) {
+        const deleteResp = await deleteEntry(entryId)
+        if (!deleteResp.authorized) {
             redirectToLogin()
             return;
         }
         setEntryToDelete(null);
+        await refreshEntries();
+    }
+
+    const handleSubmitEditClick = async () => {
+        const updateResponse = await updateEntry(entryToEdit)
+        if (!updateResponse.authorized) {
+            redirectToLogin()
+            return;
+        }
+        setEntryToEdit(null);
         await refreshEntries();
     }
 
@@ -87,6 +106,13 @@ const Entries = ({ rootState, updateState }: EntriesProps) => {
         } else { }
         setEntries(entryResponse.data)
         setIsLoadingEntries(false);
+    }
+
+    const handleEditOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        if (entryToEdit) {
+            const updatedEntry: Entry = {...entryToEdit, content: e.target.value }
+            setEntryToEdit(updatedEntry)
+        }
     }
 
     useEffect(() => {
@@ -108,7 +134,7 @@ const Entries = ({ rootState, updateState }: EntriesProps) => {
 
                 <div className="entries">
                     <EntrySearchForm onSearch={handleOnSearch} />
-                    <EntryList isLoading={isLoadingEntries} entries={entries} entryDeleteClicked={handleDeleteClick} />
+                    <EntryList isLoading={isLoadingEntries} entries={entries} entryDeleteClicked={handleDeleteClick} entryEditClicked={handleEditClick} />
                 </div>
 
             </div>
@@ -123,6 +149,20 @@ const Entries = ({ rootState, updateState }: EntriesProps) => {
                         <div className="input-group-inline">
                             <button className="error" id="confirm-delete" onClick={handleSubmitDeletionClick}>Kyllä</button>
                             <button id="cancel-delete" onClick={handleCancelDeletionClick}>Peruuta</button>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            {entryToEdit !== null &&
+                <div id="entry-edit-dialog">
+                    <div>
+                        <textarea onChange={handleEditOnChange}>
+                            {entryToEdit?.content}
+                        </textarea>
+                        <div className="input-group-inline">
+                            <button className="error" id="confirm-edit" onClick={handleSubmitEditClick}>Tallenna</button>
+                            <button id="cancel-edit" onClick={handleCancelEditClick}>Peruuta</button>
                         </div>
                     </div>
                 </div>

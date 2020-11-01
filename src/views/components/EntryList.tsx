@@ -6,9 +6,10 @@ interface EntryListProps {
     isLoading: boolean;
     entries: Entry[];
     entryDeleteClicked: (entry: Entry) => void;
+    entryEditClicked: (entry: Entry) => void;
 }
 
-export const EntryList = ({ isLoading, entries, entryDeleteClicked }: EntryListProps): JSX.Element => {
+export const EntryList = ({ isLoading, entries, entryDeleteClicked, entryEditClicked }: EntryListProps): JSX.Element => {
     if (isLoading) {
         return <p>Haetaan kirjoituksia...</p>
     } else {
@@ -22,7 +23,10 @@ export const EntryList = ({ isLoading, entries, entryDeleteClicked }: EntryListP
                                 <p className="entry-timestamp">
                                     <small>{timestampToDateString(entry.timestamp)}</small>
                                 </p>
-                                <button className="delete" onClick={() => entryDeleteClicked(entry)}>Poista</button>
+                                <div className="entry-actions">
+                                    <button className="edit" onClick={() => entryEditClicked(entry)}>Muokkaa</button>
+                                    <button className="delete" onClick={() => entryDeleteClicked(entry)}>Poista</button>
+                                </div>
                             </div>
                         </div>
                     )
