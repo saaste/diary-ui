@@ -184,6 +184,15 @@ button.edit {
     border-radius: 10px;
 }
 
+.not-found {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    width: 100%;
+}
+
 @media only screen and (max-width: 1024px) {
     .diary-container {
         grid-template-columns: 1fr;

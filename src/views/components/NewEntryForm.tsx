@@ -1,4 +1,3 @@
-import * as moment from "moment-timezone";
 import React, { useState } from "react";
 import { createEntry } from "../../clients/entries";
 

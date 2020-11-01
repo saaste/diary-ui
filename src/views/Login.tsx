@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { UpdateStateFunc, RootState } from "../App"
+import { UpdateStateFunc } from "../App"
 import { getAuthToken } from "../clients/auth";
 import { setAsLoggedIn } from "../utils/auth";
 

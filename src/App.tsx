@@ -7,6 +7,7 @@ import {
 import { getTokenFromStorage } from './utils/auth';
 import Entries from "./views/Entries";
 import Login from "./views/Login";
+import NotFound from "./views/NotFound"
 import "./App.css"
 
 
@@ -35,6 +36,9 @@ const App = () => {
         </Route>
         <Route exact path="/">
           {state.isLoggedIn ? <Entries rootState={state} updateState={updateState} /> : <Redirect to="/login" />}
+        </Route>
+        <Route>
+          <NotFound />
         </Route>
       </Switch>
     </Router>
