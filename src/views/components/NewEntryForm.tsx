@@ -1,3 +1,4 @@
+import marked from "marked";
 import React, { useState } from "react";
 import { createEntry } from "../../clients/entries";
 
@@ -9,6 +10,7 @@ export const NewEntryForm = ({ entrySaved }: NewEntryFormProps): JSX.Element => 
     const [content, setContent] = useState("")
     const [isSaving, setIsSaving] = useState(false);
     const [isSavedClass, setIsSavedClass] = useState("entry-saved");
+    const [showPreview, setShowPreview] = useState(false);
 
     const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setContent(e.target.value)
@@ -28,15 +30,26 @@ export const NewEntryForm = ({ entrySaved }: NewEntryFormProps): JSX.Element => 
         setIsSaving(false);
     }
 
+    const togglePreview = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        setShowPreview(!showPreview);
+    }
+
     return (
         <div className="new-entry-form">
             <h2>Uusi kirjoitus</h2>
             <form onSubmit={handleOnSubmit}>
                 <div className="input-group">
-                    <textarea id="content" onChange={handleContentChange} value={content} disabled={isSaving}></textarea>
+                    {showPreview
+                        ? <div className="entry-preview" dangerouslySetInnerHTML={{ __html: marked(content, { gfm: true }) || "" }} />
+                        : <textarea id="content" onChange={handleContentChange} value={content} disabled={isSaving}></textarea>
+                    }
                 </div>
-                <button disabled={content === "" || isSaving}>Tallenna</button>
-                <span className={isSavedClass}>Kirjoitus tallennettu</span>
+                <div className="new-entry-buttons">
+                    <div className={isSavedClass}>Kirjoitus tallennettu</div>
+                    <button className="preview-button" onClick={togglePreview}>{showPreview ? "Muokkaus" : "Esikatselu"}</button>
+                    <button className="save" disabled={content === "" || isSaving}>Tallenna</button>
+                </div>
             </form>
         </div>
     )

@@ -1,3 +1,4 @@
+import marked from "marked"
 import React from "react"
 import { timestampToDateString } from "../../utils/datetime"
 import { Entry } from "../../utils/types"
@@ -18,10 +19,10 @@ export const EntryList = ({ isLoading, entries, entryDeleteClicked, entryEditCli
                 {entries.map((entry, index) => {
                     return (
                         <div key={index} className="entry">
-                            <div className="entry-content">{entry.content}</div>
+                            <div className="entry-content" dangerouslySetInnerHTML={{ __html: marked(entry.content, { gfm: true }) }}></div>
                             <div className="entry-meta">
                                 <p className="entry-timestamp">
-                                    <small>{timestampToDateString(entry.timestamp)}</small>
+                                    {timestampToDateString(entry.timestamp)}
                                 </p>
                                 <div className="entry-actions">
                                     <button className="edit" onClick={() => entryEditClicked(entry)}>Muokkaa</button>
